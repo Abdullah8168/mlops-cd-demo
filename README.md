@@ -1,15 +1,15 @@
-mlops-cd-demo
+**<u>mlops-cd-demo</u>**
 
 A Continuous Delivery pipeline for a small machine learning inference API.
 
-Overview
+**<u>Overview</u>**
 
 The application is a Flask service that exposes a dummy prediction model. Its real purpose is to
 act as the payload for a complete delivery pipeline: every release is packaged once as a Docker
 image, published to the GitHub Container Registry, deployed automatically to staging, verified by
 a health check, and promoted to production only after a human approves it.
 
-How the pipeline works
+**<u>How the pipeline works</u>**
 
 Pull requests run continuous integration only. The CI workflow installs dependencies and runs the
 test suite, and nothing is packaged or deployed.
@@ -28,14 +28,14 @@ Production deployment waits for manual approval from a required reviewer. Once a
 image that was verified in staging is pulled and started. The artifact is never rebuilt between
 environments, so what runs in production is byte for byte what passed the staging smoke test.
 
-The artifact
+**<u>The artifact</u>**
 
 Each release produces an image published as ghcr.io/abdullah8168/mlops-cd-demo followed by the
 version number, along with a moving latest tag. The latest tag exists only as a convenience.
 Deployments always reference an explicit version so that any running container can be reproduced
 exactly.
 
-Endpoints
+**<u>Endpoints</u>**
 
 A GET request to the root path returns a short service banner.
 
@@ -46,14 +46,14 @@ A POST request to /predict accepts a JSON body containing a numeric value field 
 input, the prediction, and the model version. The model is deliberately trivial: it doubles the
 input value.
 
-Traceability
+**<u>Traceability</u>**
 
 The git commit is baked into the image at build time as a Docker build argument and surfaced
 through the health endpoint. This means any running container can be traced back to the exact
 commit, pull request, and release tag it came from, which is what makes an incident in production
 investigable.
 
-Rollback
+**<u>Rollback</u>**
 
 Because every image is versioned and immutable, rolling back is a matter of running an earlier
 image again rather than rebuilding anything. Stop and remove the current container, then start a
@@ -61,13 +61,13 @@ new one from the previous version tag and confirm the health endpoint reports th
 Relying on the latest tag alone would make this impossible, which is why explicit version tags
 matter.
 
-Local development
+**<u>Local development</u>**
 
 Create a virtual environment, install the requirements, and run the test suite with pytest. The
 service can be started directly with python or built and run as a Docker image. The health
 endpoint is available on port 5000.
 
-Versioning
+**<u>Versioning</u>**
 
 The VERSION file holds the current application version and should be updated in the same pull
 request as the change it describes. The release tag must match it. Application version, model
